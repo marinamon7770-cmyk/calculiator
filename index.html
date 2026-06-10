@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Простой калькулятор личного бюджета: доходы, расходы, накопления, план и факт. Работает в браузере без регистрации." />
+  <title>Калькулятор личного бюджета 3.0</title>
+  <link rel="stylesheet" href="assets/css/landing.css" />
+</head>
+<body>
+  <nav class="site-nav">
+    <a class="nav-brand" href="index.html">Бюджет 3.0</a>
+    <div class="nav-links">
+      <a href="index.html" aria-current="page">Главная</a>
+      <a href="calculator.html">Калькулятор</a>
+    </div>
+  </nav>
+
+  <main class="landing">
+    <section class="hero">
+      <span class="hero-badge">Бесплатно · Без регистрации · На русском</span>
+      <h1>Управляйте личным бюджетом спокойно и наглядно</h1>
+      <p>
+        Калькулятор помогает вести доходы и расходы по месяцам, сравнивать план с фактом,
+        следить за лимитами и видеть, куда уходят деньги. Все данные сохраняются локально
+        в вашем браузере.
+      </p>
+      <div class="hero-actions">
+        <a class="btn-primary" href="calculator.html">Открыть калькулятор</a>
+        <a class="btn-outline" href="#features">Узнать возможности</a>
+      </div>
+    </section>
+
+    <section class="stats-strip" aria-label="Краткая сводка">
+      <article class="stat-card">
+        <span>Сохранённых месяцев</span>
+        <strong id="statMonths">0</strong>
+      </article>
+      <article class="stat-card">
+        <span>Остаток текущего месяца</span>
+        <strong id="statBalance">—</strong>
+      </article>
+      <article class="stat-card">
+        <span>Расходы текущего месяца</span>
+        <strong id="statExpenses">—</strong>
+      </article>
+    </section>
+
+    <section class="features" id="features">
+      <article class="feature-card">
+        <div class="feature-icon" aria-hidden="true">📊</div>
+        <h3>План и факт</h3>
+        <p>Сравнивайте ожидаемые и реальные суммы по доходам, расходам и накоплениям в одной таблице.</p>
+      </article>
+      <article class="feature-card">
+        <div class="feature-icon" aria-hidden="true">🎯</div>
+        <h3>Лимиты и подсказки</h3>
+        <p>Задавайте лимиты по категориям и получайте понятные рекомендации, когда бюджет выходит из-под контроля.</p>
+      </article>
+      <article class="feature-card">
+        <div class="feature-icon" aria-hidden="true">💾</div>
+        <h3>Экспорт и история</h3>
+        <p>Автосохранение, история по месяцам, экспорт и импорт CSV, печать отчёта и копирование итога.</p>
+      </article>
+    </section>
+
+    <section class="steps">
+      <h2>Как начать за 3 шага</h2>
+      <div class="steps-list">
+        <article class="step-item">
+          <div class="step-number">1</div>
+          <div>
+            <h3>Откройте калькулятор</h3>
+            <p>Выберите режим — личный, семейный или проектный бюджет — и укажите нужный месяц.</p>
+          </div>
+        </article>
+        <article class="step-item">
+          <div class="step-number">2</div>
+          <div>
+            <h3>Заполните доходы и расходы</h3>
+            <p>Добавьте строки с суммами в колонках «План» и «Факт». При необходимости задайте лимиты.</p>
+          </div>
+        </article>
+        <article class="step-item">
+          <div class="step-number">3</div>
+          <div>
+            <h3>Смотрите итоги</h3>
+            <p>Остаток, диаграмма расходов и история обновляются автоматически — ничего сохранять вручную не нужно.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="cta-block">
+      <h2>Готовы навести порядок в финансах?</h2>
+      <p>Начните с текущего месяца — калькулятор уже подготовлен с типовыми категориями расходов.</p>
+      <a class="btn-primary" href="calculator.html">Перейти к калькулятору</a>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    Калькулятор личного бюджета 3.0 · данные хранятся только в вашем браузере
+  </footer>
+
+  <script src="assets/js/landing.js"></script>
+</body>
+</html>

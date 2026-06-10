@@ -1,0 +1,17 @@
+{
+  "name": "personal-budget-calculator",
+  "version": "3.0.0",
+  "description": "Калькулятор личного бюджета — лендинг и веб-приложение",
+  "private": true,
+  "scripts": {
+    "start": "npx --yes serve . -l 3000",
+    "dev": "npm start"
+  },
+  "keywords": [
+    "budget",
+    "calculator",
+    "finance",
+    "personal-finance"
+  ],
+  "license": "MIT"
+}
