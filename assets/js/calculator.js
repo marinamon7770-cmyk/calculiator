@@ -7,16 +7,30 @@
 const STORAGE_PREFIX = "personal_budget_v3_";
 
 const chartColors = [
-  "#8b6f55",
-  "#5f4633",
-  "#b7791f",
-  "#2f7d4f",
-  "#3b658f",
-  "#a65f5f",
-  "#7b6ca8",
-  "#5f8b7a",
-  "#c08b5c",
-  "#777777"
+  "#6366f1",
+  "#ec4899",
+  "#14b8a6",
+  "#f59e0b",
+  "#8b5cf6",
+  "#ef4444",
+  "#22c55e",
+  "#06b6d4",
+  "#f97316",
+  "#a855f7",
+  "#84cc16",
+  "#e11d48",
+  "#0ea5e9",
+  "#d946ef",
+  "#64748b",
+  "#ca8a04",
+  "#7c3aed",
+  "#059669",
+  "#db2777",
+  "#2563eb",
+  "#65a30d",
+  "#c026d3",
+  "#0891b2",
+  "#ea580c"
 ];
 
 const defaultData = {
@@ -82,6 +96,8 @@ const elements = {
   limitList: document.getElementById("limitList"),
   historyList: document.getElementById("historyList"),
 
+  incomeChart: document.getElementById("incomeChart"),
+  incomeChartLegend: document.getElementById("incomeChartLegend"),
   expenseChart: document.getElementById("expenseChart"),
   chartLegend: document.getElementById("chartLegend"),
 
@@ -307,10 +323,31 @@ function calculateBudget() {
     balanceFact
   });
 
-  const categories = getExpenseCategories();
-  updateCategories(categories, expensesFact);
-  updateLimits(categories);
-  drawExpenseChart(categories, expensesFact);
+  const expenseCategories = getExpenseCategories();
+  const incomeCategories = getIncomeCategories();
+
+  updateCategories(expenseCategories, expensesFact);
+  updateLimits(expenseCategories);
+
+  drawCategoryChart({
+    canvas: elements.incomeChart,
+    legendEl: elements.incomeChartLegend,
+    categories: incomeCategories,
+    total: incomeFact,
+    centerLabel: "Доходы",
+    emptyMessage: "Добавьте фактические доходы — диаграмма появится автоматически.",
+    colorOffset: 0
+  });
+
+  drawCategoryChart({
+    canvas: elements.expenseChart,
+    legendEl: elements.chartLegend,
+    categories: expenseCategories,
+    total: expensesFact,
+    centerLabel: "Расходы",
+    emptyMessage: "Добавьте фактические расходы — диаграмма появится автоматически.",
+    colorOffset: 8
+  });
 }
 
 function updateResultBox(balanceFact, incomeFact) {
@@ -388,6 +425,16 @@ function setDiffCell(cell, value) {
   } else {
     cell.className = "";
   }
+}
+
+function getIncomeCategories() {
+  return collectRows("income")
+    .map(item => ({
+      name: item.name || "Без названия",
+      amount: item.fact
+    }))
+    .filter(item => item.amount > 0)
+    .sort((a, b) => b.amount - a.amount);
 }
 
 function getExpenseCategories() {
@@ -518,8 +565,17 @@ function updateLimits(categories) {
   });
 }
 
-function drawExpenseChart(categories, totalExpensesFact) {
-  const canvas = elements.expenseChart;
+function drawCategoryChart(options) {
+  const {
+    canvas,
+    legendEl,
+    categories,
+    total,
+    centerLabel,
+    emptyMessage,
+    colorOffset = 0
+  } = options;
+
   const ctx = canvas.getContext("2d");
   const width = canvas.width;
   const height = canvas.height;
@@ -528,11 +584,11 @@ function drawExpenseChart(categories, totalExpensesFact) {
   const radius = 120;
 
   ctx.clearRect(0, 0, width, height);
-  elements.chartLegend.innerHTML = "";
+  legendEl.innerHTML = "";
 
   const visible = categories.filter(item => item.amount > 0);
 
-  if (visible.length === 0 || totalExpensesFact <= 0) {
+  if (visible.length === 0 || total <= 0) {
     ctx.fillStyle = "#f6f1ea";
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
@@ -545,16 +601,16 @@ function drawExpenseChart(categories, totalExpensesFact) {
 
     const empty = document.createElement("div");
     empty.className = "small-text";
-    empty.textContent = "Добавьте фактические расходы — диаграмма появится автоматически.";
-    elements.chartLegend.appendChild(empty);
+    empty.textContent = emptyMessage;
+    legendEl.appendChild(empty);
     return;
   }
 
   let startAngle = -Math.PI / 2;
 
   visible.forEach((item, index) => {
-    const sliceAngle = (item.amount / totalExpensesFact) * Math.PI * 2;
-    const color = chartColors[index % chartColors.length];
+    const sliceAngle = (item.amount / total) * Math.PI * 2;
+    const color = chartColors[(index + colorOffset) % chartColors.length];
 
     ctx.beginPath();
     ctx.moveTo(centerX, centerY);
@@ -565,7 +621,7 @@ function drawExpenseChart(categories, totalExpensesFact) {
 
     startAngle += sliceAngle;
 
-    const percent = Math.round((item.amount / totalExpensesFact) * 100);
+    const percent = Math.round((item.amount / total) * 100);
 
     const legendItem = document.createElement("div");
     legendItem.className = "legend-item";
@@ -579,7 +635,7 @@ function drawExpenseChart(categories, totalExpensesFact) {
 
     legendItem.appendChild(dot);
     legendItem.appendChild(text);
-    elements.chartLegend.appendChild(legendItem);
+    legendEl.appendChild(legendItem);
   });
 
   ctx.beginPath();
@@ -590,11 +646,11 @@ function drawExpenseChart(categories, totalExpensesFact) {
   ctx.fillStyle = "#5f4633";
   ctx.font = "bold 16px Arial";
   ctx.textAlign = "center";
-  ctx.fillText("Расходы", centerX, centerY - 4);
+  ctx.fillText(centerLabel, centerX, centerY - 4);
 
   ctx.font = "13px Arial";
   ctx.fillStyle = "#777777";
-  ctx.fillText(formatRubles(totalExpensesFact), centerX, centerY + 18);
+  ctx.fillText(formatRubles(total), centerX, centerY + 18);
 }
 
 function getSummaryData() {

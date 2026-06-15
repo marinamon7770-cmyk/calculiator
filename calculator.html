@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Калькулятор личного бюджета: доходы, расходы, накопления, план и факт." />
+  <title>Калькулятор бюджета — Бюджет 3.0</title>
+  <link rel="stylesheet" href="assets/css/variables.css" />
+  <link rel="stylesheet" href="assets/css/calculator.css" />
+</head>
+<body>
+  <nav class="site-nav">
+    <a class="nav-brand" href="index.html">Бюджет 3.0</a>
+    <div class="nav-links">
+      <a href="index.html">Главная</a>
+      <a href="calculator.html" aria-current="page">Калькулятор</a>
+    </div>
+  </nav>
+
+  <div class="app">
+    <header class="header">
+      <h1>Калькулятор личного бюджета</h1>
+      <p>Заполняйте план и факт по месяцам — итоги, диаграммы и история обновляются автоматически.</p>
+    </header>
+
+    <div class="top-panel">
+      <div class="field">
+        <label for="budgetMode">Режим бюджета</label>
+        <select id="budgetMode">
+          <option value="personal">Личный бюджет</option>
+          <option value="family">Семейный бюджет</option>
+          <option value="project">Бюджет проекта</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="monthSelect">Месяц</label>
+        <input type="month" id="monthSelect" />
+      </div>
+      <div class="field">
+        <label>&nbsp;</label>
+        <button class="btn-danger" id="clearBtn" type="button">Очистить месяц</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div>
+        <section class="card">
+          <h2>Доходы</h2>
+          <p class="small-text">Укажите источники дохода в колонках «План» и «Факт».</p>
+          <div class="row-header">
+            <span>Название</span>
+            <span>План</span>
+            <span>Факт</span>
+            <span>Лимит</span>
+            <span></span>
+          </div>
+          <div id="incomeRows"></div>
+          <div class="actions">
+            <button class="btn-secondary" id="addIncomeBtn" type="button">+ Добавить доход</button>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Обязательные расходы</h2>
+          <p class="small-text">Жильё, связь и другие регулярные платежи.</p>
+          <div class="row-header">
+            <span>Название</span>
+            <span>План</span>
+            <span>Факт</span>
+            <span>Лимит</span>
+            <span></span>
+          </div>
+          <div id="fixedRows"></div>
+          <div class="actions">
+            <button class="btn-secondary" id="addFixedBtn" type="button">+ Добавить строку</button>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Переменные расходы</h2>
+          <p class="small-text">Продукты, транспорт, покупки и прочее.</p>
+          <div class="row-header">
+            <span>Название</span>
+            <span>План</span>
+            <span>Факт</span>
+            <span>Лимит</span>
+            <span></span>
+          </div>
+          <div id="variableRows"></div>
+          <div class="actions">
+            <button class="btn-secondary" id="addVariableBtn" type="button">+ Добавить строку</button>
+          </div>
+        </section>
+      </div>
+
+      <div>
+        <section class="card">
+          <h2>Итоги месяца</h2>
+          <div class="summary">
+            <div class="summary-item">
+              <span>Доходы, факт</span>
+              <strong id="totalIncomeFact">0 ₽</strong>
+            </div>
+            <div class="summary-item">
+              <span>Расходы, факт</span>
+              <strong id="totalExpensesFact">0 ₽</strong>
+            </div>
+            <div class="summary-item">
+              <span>Накопления, факт</span>
+              <strong id="totalSavingsFact">0 ₽</strong>
+            </div>
+            <div class="summary-item">
+              <span>Расходы от дохода</span>
+              <strong id="expensePercent">0%</strong>
+            </div>
+          </div>
+
+          <div class="big-result" id="resultBox">
+            <span>Остаток после расходов и накоплений</span>
+            <strong id="balance">0 ₽</strong>
+          </div>
+
+          <div class="progress-box">
+            <div class="progress-label">
+              <span>Доля расходов от дохода</span>
+              <span id="progressText">0%</span>
+            </div>
+            <div class="progress">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+          </div>
+
+          <p class="advice" id="advice">Добавьте фактический доход, чтобы калькулятор смог оценить бюджет.</p>
+        </section>
+
+        <section class="card">
+          <h2>Накопления</h2>
+          <p class="small-text">Финансовая цель или резерв на месяц.</p>
+          <div class="row">
+            <input type="text" id="savingName" placeholder="Название цели" />
+            <input type="number" id="savingPlan" min="0" placeholder="План, ₽" />
+            <input type="number" id="savingFact" min="0" placeholder="Факт, ₽" />
+            <input type="text" disabled placeholder="—" />
+            <span></span>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <section class="card section-full">
+      <h2>План и факт</h2>
+      <div class="table-wrap">
+        <table class="plan-fact-table">
+          <thead>
+            <tr>
+              <th>Статья</th>
+              <th>План</th>
+              <th>Факт</th>
+              <th>Отклонение</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Доходы</td>
+              <td id="incomePlanCell">0 ₽</td>
+              <td id="incomeFactCell">0 ₽</td>
+              <td id="incomeDiffCell">0 ₽</td>
+            </tr>
+            <tr>
+              <td>Расходы</td>
+              <td id="expensesPlanCell">0 ₽</td>
+              <td id="expensesFactCell">0 ₽</td>
+              <td id="expensesDiffCell">0 ₽</td>
+            </tr>
+            <tr>
+              <td>Накопления</td>
+              <td id="savingsPlanCell">0 ₽</td>
+              <td id="savingsFactCell">0 ₽</td>
+              <td id="savingsDiffCell">0 ₽</td>
+            </tr>
+            <tr>
+              <td>Остаток</td>
+              <td id="balancePlanCell">0 ₽</td>
+              <td id="balanceFactCell">0 ₽</td>
+              <td id="balanceDiffCell">0 ₽</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card section-full">
+      <h2>Диаграммы</h2>
+      <p class="small-text">Структура доходов и расходов по фактическим суммам.</p>
+      <div class="charts-row">
+        <div class="chart-block">
+          <div class="chart-layout">
+            <canvas id="incomeChart" width="320" height="320" aria-label="Диаграмма доходов"></canvas>
+            <div class="legend" id="incomeChartLegend"></div>
+          </div>
+        </div>
+        <div class="chart-block">
+          <div class="chart-layout">
+            <canvas id="expenseChart" width="320" height="320" aria-label="Диаграмма расходов"></canvas>
+            <div class="legend" id="chartLegend"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid section-full">
+      <section class="card">
+        <h2>Категории расходов</h2>
+        <div class="category-list" id="categoryList"></div>
+      </section>
+      <section class="card">
+        <h2>Лимиты</h2>
+        <div class="limit-list" id="limitList"></div>
+      </section>
+    </div>
+
+    <section class="card section-full">
+      <h2>История по месяцам</h2>
+      <div class="history-list" id="historyList"></div>
+    </section>
+
+    <div class="actions">
+      <button class="btn" id="copyBtn" type="button">Копировать итог</button>
+      <button class="btn-blue" id="exportBtn" type="button">Экспорт CSV</button>
+      <button class="btn-secondary" id="importBtn" type="button">Импорт CSV</button>
+      <button class="btn-secondary" id="printBtn" type="button">Печать</button>
+    </div>
+
+    <input class="hidden-file" id="importFile" type="file" accept=".csv,text/csv" />
+
+    <p class="status" id="saveStatus">—</p>
+    <p class="footer-note">Данные сохраняются автоматически в браузере. Для резервной копии используйте экспорт CSV.</p>
+  </div>
+
+  <script src="assets/js/calculator.js"></script>
+</body>
+</html>
